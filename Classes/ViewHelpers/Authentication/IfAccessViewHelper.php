@@ -27,19 +27,19 @@ namespace Mittwald\Typo3Forum\ViewHelpers\Authentication;
 
 use Mittwald\Typo3Forum\Domain\Model\AccessibleInterface;
 use Mittwald\Typo3Forum\Domain\Model\Forum\Access;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
-
-// use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use Mittwald\Typo3Forum\Domain\Repository\User\FrontendUserRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  *
  * ViewHelper that renders its contents if the current user has access to a
  * certain operation on a certain object.
  */
-class IfAccessViewHelper extends AbstractViewHelper
+class IfAccessViewHelper extends AbstractConditionViewHelper
 {
-    protected $escapeOutput = false;
-    protected $escapeChildren = false;
 
     /**
      * The frontend user repository.
@@ -50,16 +50,31 @@ class IfAccessViewHelper extends AbstractViewHelper
     protected $frontendUserRepository;
 
     /**
-     * Renders this ViewHelper
-     *
-     * @param AccessibleInterface $object The object for which the access is to be checked.
-     * @param string $accessType The operation for which to check the access.
-     * @return string The ViewHelper contents if the user has access to the specified operation.
+     * @return void
+     * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception
      */
-    public function render(AccessibleInterface $object, $accessType = Access::TYPE_READ)
+    public function initializeArguments()
     {
-        if ($object->checkAccess($this->frontendUserRepository->findCurrent(), $accessType)) {
-            return $this->renderChildren();
-        }
+        parent::initializeArguments();
+        $this->registerArgument('object', AccessibleInterface::class, 'The target object to check access for', true);
+        $this->registerArgument('accessType', 'string', 'See Access::TYPE_* constants', false, Access::TYPE_READ);
+    }
+
+    /**
+     * Evaluates the condition.
+     *
+     * @param array $arguments
+     * @param RenderingContextInterface $renderingContext
+     *
+     * @return bool The ViewHelper contents if the user has access to the specified operation.
+     */
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    {
+        /* @var $objManager ObjectManager */
+        $objManager = GeneralUtility::makeInstance(ObjectManager::class);
+        /* @var $feUserRepo FrontendUserRepository */
+        $feUserRepo = $objManager->get(FrontendUserRepository::class);
+
+        return $arguments['object']->checkAccess($feUserRepo->findCurrent(), $arguments['accessType']);
     }
 }
