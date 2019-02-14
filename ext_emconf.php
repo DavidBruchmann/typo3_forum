@@ -7,11 +7,9 @@ $EM_CONF[$_EXTKEY] = [
     'author'           => 'Mittwald CM Service',
     'author_email'     => 'support@mittwald.de',
     'author_company'   => 'Mittwald CM Service',
-    'dependencies'     => 'cms,extbase,fluid,sr_feuser_register,static_info_tables',
     'state'            => 'stable',
     'uploadfolder'     => true,
     'createDirs'       => 'typo3temp/typo3_forum,typo3temp/typo3_forum/gravatar,uploads/tx_typo3forum/workflowstatus,uploads/tx_typo3forum/attachements',
-    'modify_tables'    => 'fe_users',
     'clearCacheOnLoad' => false,
 
     // NOTE: DO NOT CHANGE this version number manually.
