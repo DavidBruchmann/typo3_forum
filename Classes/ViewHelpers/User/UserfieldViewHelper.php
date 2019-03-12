@@ -65,7 +65,6 @@ class UserfieldViewHelper extends AbstractViewHelper
         $user = $arguments['user'];
         $userfield = $arguments['userfield'];
 
-
         if (!$userfield instanceof TyposcriptUserfield) {
             return new \InvalidArgumentException(
                 'Only userfields of type TyposcriptUserField are supported',
