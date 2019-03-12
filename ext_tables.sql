@@ -145,7 +145,7 @@ CREATE TABLE tx_typo3forum_domain_model_forum_post (
   uid int(11) NOT NULL auto_increment,
   pid int(11) DEFAULT '0' NOT NULL,
   topic int(11) unsigned DEFAULT '0' NOT NULL,
-  text text,
+  text mediumtext,
   rendered_text blob,
   author int(11) unsigned DEFAULT '0',
   author_name tinytext,
