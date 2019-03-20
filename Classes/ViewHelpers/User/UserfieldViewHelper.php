@@ -75,6 +75,7 @@ class UserfieldViewHelper extends AbstractViewHelper
         $data = self::convertDataToString($data);
 
         $arguments['typoscriptObjectPath'] = $userfield->getTyposcriptPath() . '.output';
+        $arguments['data'] = implode(' ', $data);
 
         return self::getCObjectViewHelper()::renderStatic($arguments, $renderChildrenClosure, $renderingContext);
     }
