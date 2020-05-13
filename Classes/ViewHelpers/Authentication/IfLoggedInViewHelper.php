@@ -25,24 +25,26 @@ namespace Mittwald\Typo3Forum\ViewHelpers\Authentication;
  *  This copyright notice MUST APPEAR in all copies of the script!      *
  *                                                                      */
 
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  * ViewHelper that renders its contents if there is a user currently logged
  * in.
  */
-class IfLoggedInViewHelper extends AbstractViewHelper
+class IfLoggedInViewHelper extends AbstractConditionViewHelper
 {
-    protected $escapeOutput = false;
-    protected $escapeChildren = false;
 
     /**
      * Renders the ViewHelper contents if there is a user logged in.
      *
-     * @return string HTML content
+     * @param array $arguments
+     * @param RenderingContextInterface $renderingContext
+     *
+     * @return bool
      */
-    public function render()
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
     {
-        return $GLOBALS['TSFE']->fe_user->user['uid'] ? $this->renderChildren() : '';
+        return isset($GLOBALS['TSFE']->fe_user->user['uid']) && !empty($GLOBALS['TSFE']->fe_user->user['uid']);
     }
 }
