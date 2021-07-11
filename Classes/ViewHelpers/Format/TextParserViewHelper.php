@@ -34,6 +34,11 @@ class TextParserViewHelper extends AbstractViewHelper
 {
 
     /**
+     * @var bool
+     */
+    protected $escapeOutput = false;
+
+    /**
      * The text parser service
      * @var \Mittwald\Typo3Forum\TextParser\TextParserService
      * @inject
@@ -52,12 +57,13 @@ class TextParserViewHelper extends AbstractViewHelper
      *
      * Renders the input text.
      *
-     * @param string                             $configuration The configuration path
+     * @param string $configuration The configuration path
      * @param \Mittwald\Typo3Forum\Domain\Model\Forum\Post $post
-     * @param string                             $content       The content to be rendered. If NULL, the node
-     *                                                           content will be rendered instead.
-     * @return string                The rendered text
+     * @param string $content The content to be rendered. If NULL, the node
+     *                        content will be rendered instead.
      *
+     * @return string                The rendered text
+     * @throws \Mittwald\Typo3Forum\Domain\Exception\TextParser\Exception
      */
     public function render(
         $configuration = 'plugin.tx_typo3forum.settings.textParsing',
@@ -68,11 +74,7 @@ class TextParserViewHelper extends AbstractViewHelper
         $this->textParserService->loadConfiguration($configuration);
 
         if ($post !== null) {
-            //if(!$post->_getProperty('renderedText')) {
             $renderedText = $this->textParserService->parseText($post->getText());
-        //	$post->_setProperty('renderedText', $renderedText);
-            //	$this->postRepository->update($post);
-            //} else $renderedText = $post->_getProperty('renderedText');
         } else {
             $renderedText = $this->textParserService->parseText($content ? $content : trim($this->renderChildren()));
         }
